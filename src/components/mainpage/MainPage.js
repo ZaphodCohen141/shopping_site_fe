@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getProductsByNumber, updateProductImageUrl } from '../../services/api';
+import { getProductsByNumber, updateProductImageUrl, searchProducts } from '../../services/api';
 import Product from '../product/Product';
+import NavBar from './Navbar';
 import './MainPage.css';
 
 const MainPage = ({ items, currentUser, onLogout }) => {
@@ -11,12 +12,10 @@ const MainPage = ({ items, currentUser, onLogout }) => {
       getProductsByNumber(6)
         .then(async (res) => {
           const productsData = res.data;
-
-          // Check for missing images and update if necessary
+          // directly update product image
           const updatedProducts = await Promise.all(
             productsData.map(async (product) => {
               if (!product.imageUrl) {
-                // Update the product image URL if missing
                 const response = await updateProductImageUrl(product.productName);
                 product.imageUrl = response.data.imageUrl;
               }
@@ -32,31 +31,17 @@ const MainPage = ({ items, currentUser, onLogout }) => {
     }
   }, [items]);
 
+  const handleSearch = (searchQuery) => {
+    searchProducts(searchQuery)
+      .then((res) => {
+        setProducts(res.data);
+      })
+      .catch((err) => console.log(err.message));
+  };
+
   return (
     <div className="main-page">
-      <header className="navbar">
-        <button className="shop-logo" onClick={() => window.location.href = '/'}>
-          ShopLogo
-        </button>
-        <nav>
-          <ul>
-            <li><button>Orders</button></li>
-            <li><button>Favorites</button></li>
-            {currentUser ? (
-              <>
-                <li><span>Welcome, {currentUser.firstName}</span></li>
-                <li><button onClick={onLogout}>Logout</button></li>
-              </>
-            ) : (
-              <>
-                <li><button onClick={() => window.location.href = '/login'}>Login</button></li>
-                <li><button onClick={() => window.location.href = '/register'}>Sign Up</button></li>
-              </>
-            )}
-          </ul>
-        </nav>
-      </header>
-
+      <NavBar currentUser={currentUser} onLogout={onLogout} onSearch={handleSearch} />
       <main className="main-content">
         <h1 className="main-heading">Welcome to My Shopping Site</h1>
         

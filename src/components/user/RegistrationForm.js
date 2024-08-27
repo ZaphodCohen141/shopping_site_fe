@@ -1,12 +1,11 @@
 import React, { useRef, useState, useEffect, Fragment } from "react";
-import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createNewUser, checkUserExists } from "../../services/api";
 import { Link } from "react-router-dom";
 import './RegistrationForm.css';  
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const PWD_REGEX = /^[A-Za-z0-9]{6,24}$/;
+
 
 const RegistrationForm = () => {
     const userRef = useRef();
@@ -36,8 +35,11 @@ const RegistrationForm = () => {
     }, [user]);
 
     useEffect(() => {
-        setValidPwd(PWD_REGEX.test(pwd));
-        setValidMatch(pwd === matchPwd);
+        const isValidPwd = PWD_REGEX.test(pwd);
+        setValidPwd(isValidPwd);
+        const isMatch = pwd === matchPwd;
+        setValidMatch(isMatch);
+        console.log({ isValidPwd, isMatch });
     }, [pwd, matchPwd]);
 
     useEffect(() => {
@@ -46,21 +48,25 @@ const RegistrationForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         const v1 = USER_REGEX.test(user);
         const v2 = PWD_REGEX.test(pwd);
+        console.log('Username valid:', USER_REGEX.test(user));
+        console.log('Password valid:', PWD_REGEX.test(pwd));
         if (!v1 || !v2) {
             setErrMsg("Invalid Entry");
             return;
         }
-
+    
         try {
-            const userExists = await checkUserExists(user);
+            const userExistsResponse = await checkUserExists(user);
+            const userExists = userExistsResponse.data; 
+    
             if (userExists) {
                 setErrMsg('Username Taken');
                 return;
             }
-
+    
             const newUserBody = {
                 username: user,
                 password: pwd,
@@ -70,7 +76,7 @@ const RegistrationForm = () => {
                 phone: "1234567890",
                 address: "City, Country",
             };
-
+    
             await createNewUser(newUserBody);
             setSuccess(true);
             setUser('');
@@ -81,6 +87,7 @@ const RegistrationForm = () => {
             errRef.current.focus();
         }
     };
+    
 
     return (
         <Fragment>
@@ -100,8 +107,6 @@ const RegistrationForm = () => {
                     <form onSubmit={handleSubmit}>
                         <label htmlFor="username">
                             Username:
-                            <FontAwesomeIcon icon={faCheck} className={validName ? 'valid' : 'hide'} />
-                            <FontAwesomeIcon icon={faTimes} className={validName || !user ? 'hide' : 'invalid'} />
                         </label>
                         <input
                             type="text"
@@ -115,16 +120,12 @@ const RegistrationForm = () => {
                             onBlur={() => setUserFocus(false)}
                         />
                         <p id="uidnote" className={userFocus && user && !validName ? 'instructions' : 'offscreen'}>
-                            <FontAwesomeIcon icon={faInfoCircle} />
                             4 to 24 characters.<br />
-                            Must begin with a letter.<br />
-                            Letters, numbers, underscores, hyphens allowed.
+                            Must begin with a letter.
                         </p>
 
                         <label htmlFor="password">
                             Password:
-                            <FontAwesomeIcon icon={faCheck} className={validPwd ? 'valid' : 'hide'} />
-                            <FontAwesomeIcon icon={faTimes} className={validPwd || !pwd ? 'hide' : 'invalid'} />
                         </label>
                         <input
                             type="password"
@@ -136,16 +137,11 @@ const RegistrationForm = () => {
                             onBlur={() => setPwdFocus(false)}
                         />
                         <p id="pwdnote" className={pwdFocus && !validPwd ? 'instructions' : 'offscreen'}>
-                            <FontAwesomeIcon icon={faInfoCircle} />
-                            8 to 24 characters.<br />
-                            Must include uppercase and lowercase letters, a number, and a special character.<br />
-                            Allowed special characters: <span>!</span> <span aria-label="at symbol">@</span> <span>#</span> <span>$</span> <span>%</span>
+                            6 to 24 characters.
                         </p>
 
                         <label htmlFor="confirm_pwd">
                             Confirm Password:
-                            <FontAwesomeIcon icon={faCheck} className={validMatch && matchPwd ? 'valid' : 'hide'} />
-                            <FontAwesomeIcon icon={faTimes} className={validMatch || !matchPwd ? 'hide' : 'invalid'} />
                         </label>
                         <input
                             type="password"
@@ -157,11 +153,10 @@ const RegistrationForm = () => {
                             onBlur={() => setMatchFocus(false)}
                         />
                         <p id="confirmnote" className={matchFocus && !validMatch ? 'instructions' : 'offscreen'}>
-                            <FontAwesomeIcon icon={faInfoCircle} />
                             Must match the first password input field.
                         </p>
 
-                        <button disabled={!validName || !validPwd || !validMatch}>Sign Up</button>
+                        <button >Sign Up</button>
                     </form>
                     <p>
                         Already registered?<br />

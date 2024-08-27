@@ -1,24 +1,89 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #e0f7fa;
+  border-bottom: 2px solid #007bff;
+}
+
+.navbar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 20px; /* Use gap for spacing */
+}
+
+.navbar ul li {
+  margin-right: 0; /* Remove margin, gap will handle spacing */
+}
+
+.navbar button {
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border: 1px solid #007bff;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  color: #007bff;
+  transition: background-color 0.3s ease;
+}
+
+.navbar button:hover {
+  background-color: #e2e6ea;
+}
+
+.shop-logo {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #007bff;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  margin-left: 20px;
+}
+
 .search-bar {
-    margin-bottom: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .search-bar input[type="text"] {
-    width: 70%;
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  .search-bar button {
-    padding: 0.5rem 1rem;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-left: 0.5rem;
-  }
-  
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.search-bar input[type="text"] {
+  width: 100%;
+  max-width: 400px; /* Limit width of search bar */
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+}
+
+.search-bar input[type="text"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.search-bar button {
+  padding: 8px 12px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+  background-color: #0056b3;
+}

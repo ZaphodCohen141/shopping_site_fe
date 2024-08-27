@@ -15,13 +15,20 @@ const SearchBar = ({ onSearch }) => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit();
+    }
+  };
+
   return (
-    <div className="search-bar search-bar-container">
+    <div className="search-bar">
       <input
         type="text"
         placeholder="Search for items..."
         value={searchQuery}
         onChange={handleSearchChange}
+        onKeyPress={handleKeyPress} 
       />
       <button onClick={handleSearchSubmit}>Search</button>
     </div>

@@ -28,7 +28,7 @@ function LoginForm() {
                 username: user,
                 password: pwd,
             };
-            const response = await loginUser(userBody);  // Updated to use loginUser
+            const response = await loginUser(userBody);  
             if (response.data) {
                 setSuccess(true);
                 setUser("");
