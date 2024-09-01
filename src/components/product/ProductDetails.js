@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductImg from './ProductImg';
-import { getProductById, addToCart, addFavorite } from '../../services/api'; // Import functions
+import { getProductById, addToCart } from '../../services/api'; 
 import './ProductDetails.css';
 
 const ProductDetails = ({ currentUser }) => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
-
-    // Get the current user's ID
-    const userId = currentUser ? currentUser.id : null;
 
     useEffect(() => {
         getProductById(id)
@@ -20,19 +17,16 @@ const ProductDetails = ({ currentUser }) => {
             .catch((err) => console.error('Error getting product:', err.message));
     }, [id]);
 
-    const handleBuy = () => {
-        if (userId) {
-            addToCart(userId, product.id, 1);
-        } else {
-            alert("Please log in to buy products.");
+    const handleBuy = async () => {
+        if (!currentUser) {
+            console.error("User not logged in");
+            return;
         }
-    };
-
-    const handleLike = () => {
-        if (userId) {
-            addFavorite(userId, product.id);
-        } else {
-            alert("Please log in to like products.");
+        try {
+            const response = await addToCart(currentUser.username, product.id);
+            console.log("Product added to cart successfully", response.data);
+        } catch (error) {
+            console.error('Error adding product to cart:', error.message);
         }
     };
 
@@ -49,8 +43,7 @@ const ProductDetails = ({ currentUser }) => {
                     <p>Price: ${product.price}</p>
                     <p>Quantity: {product.quantity}</p>
                     <p>Status: {product.status === 1 ? 'Available' : 'Out of Stock'}</p>
-                    <button onClick={handleBuy}>Buy</button>
-                    <button onClick={handleLike}>Like</button>
+                    <button onClick={handleBuy}>Add to Cart</button>
                 </div>
             </div>
             <div className="product-details-placeholder">

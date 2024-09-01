@@ -7,6 +7,7 @@ import ProductDetails from './components/product/ProductDetails';
 import LoginForm from './components/user/LoginForm';
 import RegistrationForm from './components/user/RegistrationForm';
 import UserPage from './components/user/UserPage';
+import ShoppingCart from './components/shoppingcart/ShoppingCart';
 
 function App() {
   const [filteredItems] = useState([]);
@@ -30,6 +31,7 @@ function App() {
           <Route path="/signup" element={<RegistrationForm />} />
           <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
           <Route path="/userPage" element={<UserPage currentUser={currentUser} onLogout={handleLogout} />} />
+          <Route path="/shoppingcart" element={<ShoppingCart currentUser={currentUser} />} />
         </Routes>
       </div>
     </Router>

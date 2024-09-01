@@ -48,7 +48,7 @@ const ProductList = () => {
           </div>
         ))}
       </div>
-      <div className="pagination-controls">
+      <div className="page-controls">
         <button onClick={prevPage} disabled={currentPage === 0}>
           Previous
         </button>

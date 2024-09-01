@@ -54,10 +54,6 @@ export const getUserLoginStatus = (username) => {
   return axios.get(`/api/public/user/user_status/${username}`);
 };
 
-export const addToCart = (userId, productId, quantity) => {
-  return axios.post(`/api/public/shopping_cart/add`, { userId, productId, quantity });
-};
-
 export const addFavorite = (userId, productId) => {
   return axios.post(`/api/favorites/add`, { userId, productId });
 };
@@ -78,12 +74,18 @@ export const getCart = (username) => {
   return axios.get(`/api/public/shopping_cart/get/${username}`);
 };
 
+export const deleteCart = (username) => {
+  return axios.delete(`/api/public/shopping_cart/delete/${username}`);
+};
+
 export const updateCart = (cart) => {
   return axios.put(`/api/public/shopping_cart/update`, cart);
 };
 
-export const deleteCart = (username) => {
-  return axios.delete(`/api/public/shopping_cart/delete/${username}`);
+export const addToCart = (username, productId) => {
+  return axios.post(`/api/public/shopping_cart/add`, null, {
+    params: { username, productId }
+  });
 };
 
 export const createOrder = (order) => {

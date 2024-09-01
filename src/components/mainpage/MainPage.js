@@ -7,7 +7,7 @@ import { getUserLoginStatus } from '../../services/api';
 
 const MainPage = ({ items, currentUser, onLogout }) => {
   const [products, setProducts] = useState([]);
-  const [user, setUser] = useState(null);  
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -22,12 +22,10 @@ const MainPage = ({ items, currentUser, onLogout }) => {
         .catch(err => console.error('Error checking user status:', err.message));
     }
 
-    // Fetch initial products
     if (items.length === 0) {
       getProductsByNumber(6)
         .then(async (res) => {
           const productsData = res.data;
-          // Update product image if not available
           const updatedProducts = await Promise.all(
             productsData.map(async (product) => {
               if (!product.imageUrl) {
@@ -60,7 +58,8 @@ const MainPage = ({ items, currentUser, onLogout }) => {
         <h1 className="main-heading">Welcome to My Shopping Site</h1>
         <div className="product-grid">
           {products.map(product => (
-            <Product key={product.id} product={product} />
+              <Product key={product.id} product={product} currentUser={currentUser}
+            />
           ))}
         </div>
         <button onClick={() => window.location.href='/products'}>
