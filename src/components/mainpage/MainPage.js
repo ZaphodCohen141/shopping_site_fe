@@ -3,16 +3,31 @@ import { getProductsByNumber, updateProductImageUrl, searchProducts } from '../.
 import Product from '../product/Product';
 import NavBar from './Navbar';
 import './MainPage.css';
+import { getUserLoginStatus } from '../../services/api';
 
 const MainPage = ({ items, currentUser, onLogout }) => {
   const [products, setProducts] = useState([]);
+  const [user, setUser] = useState(null);  
 
   useEffect(() => {
+    if (currentUser) {
+      getUserLoginStatus(currentUser.username)
+        .then(res => {
+          if (res.data === 1) {
+            setUser(currentUser);
+          } else {
+            setUser(null);
+          }
+        })
+        .catch(err => console.error('Error checking user status:', err.message));
+    }
+
+    // Fetch initial products
     if (items.length === 0) {
       getProductsByNumber(6)
         .then(async (res) => {
           const productsData = res.data;
-          // directly update product image
+          // Update product image if not available
           const updatedProducts = await Promise.all(
             productsData.map(async (product) => {
               if (!product.imageUrl) {
@@ -22,35 +37,32 @@ const MainPage = ({ items, currentUser, onLogout }) => {
               return product;
             })
           );
-
           setProducts(updatedProducts);
         })
-        .catch((err) => console.log(err.message));
+        .catch(err => console.log(err.message));
     } else {
       setProducts(items);
     }
-  }, [items]);
+  }, [items, currentUser]);
 
   const handleSearch = (searchQuery) => {
     searchProducts(searchQuery)
-      .then((res) => {
+      .then(res => {
         setProducts(res.data);
       })
-      .catch((err) => console.log(err.message));
+      .catch(err => console.log(err.message));
   };
 
   return (
     <div className="main-page">
-      <NavBar currentUser={currentUser} onLogout={onLogout} onSearch={handleSearch} />
+      <NavBar currentUser={user} onLogout={onLogout} onSearch={handleSearch} />
       <main className="main-content">
         <h1 className="main-heading">Welcome to My Shopping Site</h1>
-        
         <div className="product-grid">
-          {products.map((product) => (
+          {products.map(product => (
             <Product key={product.id} product={product} />
           ))}
         </div>
-
         <button onClick={() => window.location.href='/products'}>
           View All Products
         </button>

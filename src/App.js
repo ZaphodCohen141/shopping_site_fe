@@ -4,8 +4,9 @@ import './App.css';
 import MainPage from './components/mainpage/MainPage';
 import ProductList from './components/product/ProductList';
 import ProductDetails from './components/product/ProductDetails';
-import LoginForm from './components/user/LoginForm'; // Import LoginForm
-import RegistrationForm from './components/user/RegistrationForm'; // Import RegistrationForm
+import LoginForm from './components/user/LoginForm';
+import RegistrationForm from './components/user/RegistrationForm';
+import UserPage from './components/user/UserPage';
 
 function App() {
   const [filteredItems] = useState([]);
@@ -27,7 +28,8 @@ function App() {
           <Route path="/products" element={<ProductList />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/signup" element={<RegistrationForm />} />
-          <Route path="/login" element={<LoginForm />} />
+          <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
+          <Route path="/userPage" element={<UserPage currentUser={currentUser} onLogout={handleLogout} />} />
         </Routes>
       </div>
     </Router>

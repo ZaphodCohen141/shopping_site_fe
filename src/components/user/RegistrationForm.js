@@ -6,7 +6,6 @@ import './RegistrationForm.css';
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^[A-Za-z0-9]{6,24}$/;
 
-
 const RegistrationForm = () => {
     const userRef = useRef();
     const errRef = useRef();
@@ -23,6 +22,12 @@ const RegistrationForm = () => {
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
 
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [address, setAddress] = useState('');
+    
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
 
@@ -39,55 +44,56 @@ const RegistrationForm = () => {
         setValidPwd(isValidPwd);
         const isMatch = pwd === matchPwd;
         setValidMatch(isMatch);
-        console.log({ isValidPwd, isMatch });
     }, [pwd, matchPwd]);
 
     useEffect(() => {
         setErrMsg('');
-    }, [user, pwd, matchPwd]);
+    }, [user, pwd, matchPwd, firstName, lastName, email, phone, address]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         const v1 = USER_REGEX.test(user);
         const v2 = PWD_REGEX.test(pwd);
-        console.log('Username valid:', USER_REGEX.test(user));
-        console.log('Password valid:', PWD_REGEX.test(pwd));
         if (!v1 || !v2) {
             setErrMsg("Invalid Entry");
             return;
         }
-    
+
         try {
             const userExistsResponse = await checkUserExists(user);
-            const userExists = userExistsResponse.data; 
-    
+            const userExists = userExistsResponse.data;
+
             if (userExists) {
                 setErrMsg('Username Taken');
                 return;
             }
-    
+
             const newUserBody = {
                 username: user,
                 password: pwd,
-                firstName: "First",
-                lastName: "Last",
-                email: "email@example.com",
-                phone: "1234567890",
-                address: "City, Country",
+                firstName,
+                lastName,
+                email,
+                phone,
+                address,
             };
-    
+
             await createNewUser(newUserBody);
             setSuccess(true);
             setUser('');
             setPwd('');
             setMatchPwd('');
+            setFirstName('');
+            setLastName('');
+            setEmail('');
+            setPhone('');
+            setAddress('');
         } catch (err) {
             setErrMsg('Registration Failed');
             errRef.current.focus();
         }
     };
-    
 
     return (
         <Fragment>
@@ -156,7 +162,62 @@ const RegistrationForm = () => {
                             Must match the first password input field.
                         </p>
 
-                        <button >Sign Up</button>
+                        <label htmlFor="firstName">
+                            First Name:
+                        </label>
+                        <input
+                            type="text"
+                            id="firstName"
+                            onChange={(e) => setFirstName(e.target.value)}
+                            value={firstName}
+                            required
+                        />
+
+                        <label htmlFor="lastName">
+                            Last Name:
+                        </label>
+                        <input
+                            type="text"
+                            id="lastName"
+                            onChange={(e) => setLastName(e.target.value)}
+                            value={lastName}
+                            required
+                        />
+
+                        <label htmlFor="email">
+                            Email:
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            onChange={(e) => setEmail(e.target.value)}
+                            value={email}
+                            required
+                        />
+
+                        <label htmlFor="phone">
+                            Phone:
+                        </label>
+                        <input
+                            type="text"
+                            id="phone"
+                            onChange={(e) => setPhone(e.target.value)}
+                            value={phone}
+                            required
+                        />
+
+                        <label htmlFor="address">
+                            Address (Country & City):
+                        </label>
+                        <input
+                            type="text"
+                            id="address"
+                            onChange={(e) => setAddress(e.target.value)}
+                            value={address}
+                            required
+                        />
+
+                        <button disabled={!validName || !validPwd || !validMatch}>Sign Up</button>
                     </form>
                     <p>
                         Already registered?<br />

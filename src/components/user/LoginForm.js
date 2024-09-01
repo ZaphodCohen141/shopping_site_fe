@@ -1,11 +1,12 @@
 import React, { useRef, useState, useEffect, Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from '../../services/api';
 import './LoginForm.css';  
 
-function LoginForm() {
+function LoginForm({ onLogin }) {
     const userRef = useRef();
     const errRef = useRef();
+    const navigate = useNavigate();
 
     const [user, setUser] = useState("");
     const [pwd, setPwd] = useState("");
@@ -30,13 +31,17 @@ function LoginForm() {
             };
             const response = await loginUser(userBody);  
             if (response.data) {
+                console.log(response.data);
+                onLogin(response.data); 
                 setSuccess(true);
                 setUser("");
                 setPwd("");
+                navigate('/');
             } else {
                 setErrMsg("Authentication Failed");
             }
         } catch (err) {
+            console.log(err)
             if (!err.response) {
                 setErrMsg("No Server Response");
             } else if (err.response.status === 403) {
@@ -46,7 +51,7 @@ function LoginForm() {
             }
             errRef.current.focus();
         }
-    };
+    };    
 
     return (
         <Fragment>

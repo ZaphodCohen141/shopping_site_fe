@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductImg from './ProductImg';
-import { getProductById } from '../../services/api';
+import { getProductById, addToCart, addFavorite } from '../../services/api'; // Import functions
 import './ProductDetails.css';
 
-const ProductDetails = () => {
+const ProductDetails = ({ currentUser }) => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
+
+    // Get the current user's ID
+    const userId = currentUser ? currentUser.id : null;
 
     useEffect(() => {
         getProductById(id)
@@ -14,8 +17,24 @@ const ProductDetails = () => {
                 setProduct(res.data);
                 console.log("Product data:", res.data);
             })
-            .catch((err) => console.error('Error fetching product:', err.message));
+            .catch((err) => console.error('Error getting product:', err.message));
     }, [id]);
+
+    const handleBuy = () => {
+        if (userId) {
+            addToCart(userId, product.id, 1);
+        } else {
+            alert("Please log in to buy products.");
+        }
+    };
+
+    const handleLike = () => {
+        if (userId) {
+            addFavorite(userId, product.id);
+        } else {
+            alert("Please log in to like products.");
+        }
+    };
 
     if (!product) {
         return <p>Loading product details...</p>;
@@ -30,6 +49,8 @@ const ProductDetails = () => {
                     <p>Price: ${product.price}</p>
                     <p>Quantity: {product.quantity}</p>
                     <p>Status: {product.status === 1 ? 'Available' : 'Out of Stock'}</p>
+                    <button onClick={handleBuy}>Buy</button>
+                    <button onClick={handleLike}>Like</button>
                 </div>
             </div>
             <div className="product-details-placeholder">
