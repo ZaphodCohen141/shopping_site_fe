@@ -26,21 +26,20 @@ const Product = ({ product, currentUser }) => {
     navigate(`/product/${product.id}`);
   };
 
-  const handleLike = (event) => {
+  const handleLike = async (event) => {
     event.stopPropagation();
 
-    if (!currentUser?.userId) {
-      console.error("User ID not provided");
+    if (!currentUser) {
+      console.error("User not logged in");
       return;
     }
 
-    addFavorite(currentUser.userId, product.id)
-      .then(() => {
-        console.log("Product added to favorites successfully");
-      })
-      .catch((error) => {
-        console.error("Error adding product to favorites:", error.message);
-      });
+    try {
+      await addFavorite(currentUser.id, product.id);
+      console.log("Product added to favorites successfully");
+    } catch (error) {
+      console.error("Error adding product to favorites:", error.message);
+    }
   };
 
   return (

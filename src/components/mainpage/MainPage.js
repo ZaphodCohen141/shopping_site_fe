@@ -53,9 +53,9 @@ const MainPage = ({ items, currentUser, onLogout }) => {
 
   return (
     <div className="main-page">
-      <NavBar currentUser={user} onLogout={onLogout} onSearch={handleSearch} />
+      <NavBar currentUser={currentUser} onLogout={onLogout} onSearch={handleSearch}/>
       <main className="main-content">
-        <h1 className="main-heading">Welcome to My Shopping Site</h1>
+        <h1 className="main-heading">Welcome to LeMagnific</h1>
         <div className="product-grid">
           {products.map(product => (
               <Product key={product.id} product={product} currentUser={currentUser}

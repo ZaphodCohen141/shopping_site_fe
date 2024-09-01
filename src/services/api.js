@@ -55,8 +55,11 @@ export const getUserLoginStatus = (username) => {
 };
 
 export const addFavorite = (userId, productId) => {
-  return axios.post(`/api/favorites/add`, { userId, productId });
+  return axios.post(`/api/favorites/add`, null, {
+    params: { userId, productId }
+  });
 };
+
 
 export const getFavoriteProducts = (userId) => {
   return axios.get(`/api/favorites/${userId}`);

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductImg from './ProductImg';
-import { getProductById, addToCart } from '../../services/api'; 
+import { getProductById, addToCart } from '../../services/api';
+import NavBar from '../mainpage/Navbar';
 import './ProductDetails.css';
 
-const ProductDetails = ({ currentUser }) => {
+const ProductDetails = ({ currentUser, onLogout, onSearch }) => {  // Added onSearch here
     const { id } = useParams();
     const [product, setProduct] = useState(null);
 
@@ -31,23 +32,29 @@ const ProductDetails = ({ currentUser }) => {
     };
 
     if (!product) {
-        return <p>Loading product details...</p>;
+        return <p>Just have a little patience <b></b>
+        Still hurting from a love I lost<b></b>
+        I'm feeling your frustration<b></b>
+        But any minute all the pain will stop</p>;
     }
 
     return (
-        <div className="product-details-container">
-            <div className="product-frame">
-                <ProductImg imageUrl={product.imageUrl} altText={product.productName} size="large" />
-                <div className="product-info">
-                    <h2>{product.productName}</h2>
-                    <p>Price: ${product.price}</p>
-                    <p>Quantity: {product.quantity}</p>
-                    <p>Status: {product.status === 1 ? 'Available' : 'Out of Stock'}</p>
-                    <button onClick={handleBuy}>Add to Cart</button>
+        <div>
+            <NavBar currentUser={currentUser} onLogout={onLogout} onSearch={onSearch} /> {/* Added onSearch here */}
+            <div className="product-details-container">
+                <div className="product-frame">
+                    <ProductImg imageUrl={product.imageUrl} altText={product.productName} size="large" />
+                    <div className="product-info">
+                        <h2>{product.productName}</h2>
+                        <p>Price: ${product.price}</p>
+                        <p>Quantity: {product.quantity}</p>
+                        <p>Status: {product.status === 1 ? 'Available' : 'Out of Stock'}</p>
+                        <button onClick={handleBuy}>Add to Cart</button>
+                    </div>
                 </div>
-            </div>
-            <div className="product-details-placeholder">
-                <p>Placeholder for additional product details.</p>
+                <div className="product-details-placeholder">
+                    <p>Placeholder for additional product details.</p>
+                </div>
             </div>
         </div>
     );
