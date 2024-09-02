@@ -66,8 +66,11 @@ export const getFavoriteProducts = (userId) => {
 };
 
 export const removeFavorite = (userId, productId) => {
-  return axios.delete(`/api/favorites/remove`, { data: { userId, productId } });
+  return axios.delete(`/api/favorites/remove`, {
+    params: { userId, productId }
+  });
 };
+
 
 export const createCart = (cart) => {
   return axios.post(`/api/public/shopping_cart/create`, cart);

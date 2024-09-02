@@ -10,7 +10,7 @@ const Product = ({ product, currentUser }) => {
   const handleBuy = async (event) => {
     event.stopPropagation(); 
     if (!currentUser) {
-      console.error("User not logged in");
+      alert("Please login or register to the site");
       return;
     }
 
@@ -30,7 +30,7 @@ const Product = ({ product, currentUser }) => {
     event.stopPropagation();
 
     if (!currentUser) {
-      console.error("User not logged in");
+      alert("Please login or register to the site");
       return;
     }
 
